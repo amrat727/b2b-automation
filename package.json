@@ -1,0 +1,20 @@
+{
+  "name": "b2b-automation",
+  "version": "1.0.0",
+  "description": "Playwright / TypeScript automation of the Pilot B2B agent portal (b2b.nexgenpilot.com)",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:login": "playwright test --project=login",
+    "test:booking": "playwright test --project=booking --workers=1",
+    "report": "playwright show-report",
+    "typecheck": "tsc -p ."
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^18.19.130",
+    "dotenv": "^16.4.5",
+    "typescript": "^5.6.3"
+  }
+}
