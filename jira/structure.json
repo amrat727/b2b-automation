@@ -1,0 +1,144 @@
+{
+ "site": "https://piloterp.atlassian.net",
+ "project": {
+  "key": "PB2B",
+  "name": "Pilot-B2B",
+  "type": "company-managed (classic) software"
+ },
+ "decided": "2026-11-22: like the ERP project KAN - module = Epic, sub-module = Component; summary starts with B2B-nnn; priority = severity; assignee Sahil Chauhan",
+ "assignee": "712020:70aa416e-9239-4f68-b1b5-6bfbc12897cc",
+ "epics": {
+  "Login & Access": {
+   "route": "/login",
+   "components": [
+    "Login – Session"
+   ],
+   "key": "PB2B-1"
+  },
+  "Home": {
+   "route": "/",
+   "components": [
+    "Home – Dashboard",
+    "Home – Global Search",
+    "Home – Deals & Offers"
+   ],
+   "key": "PB2B-2"
+  },
+  "Search & Book": {
+   "route": "/search/hotel",
+   "components": [
+    "Search – Hotels",
+    "Search – Flights",
+    "Search – Flight + Hotel",
+    "Search – Multicentre",
+    "Search – Activities",
+    "Search – Packages & Bundles",
+    "Search – Transfers",
+    "Search – Cruise",
+    "Search – Rail",
+    "Search – Cart & Checkout"
+   ],
+   "key": "PB2B-3"
+  },
+  "Bookings": {
+   "route": "/bookings",
+   "components": [
+    "Bookings – List",
+    "Bookings – Booking Detail",
+    "Bookings – Cancellation & Amendments",
+    "Bookings – Vouchers & Documents"
+   ],
+   "key": "PB2B-4"
+  },
+  "Trip Builder": {
+   "route": "/trip",
+   "components": [
+    "Trip Builder – Itinerary"
+   ],
+   "key": "PB2B-5"
+  },
+  "Quotations": {
+   "route": "/quotes",
+   "components": [
+    "Quotations – From Our Team",
+    "Quotations – My Quotations"
+   ],
+   "key": "PB2B-6"
+  },
+  "Package Builder": {
+   "route": "/packages",
+   "components": [
+    "Package Builder – Build"
+   ],
+   "key": "PB2B-7"
+  },
+  "Savings": {
+   "route": "/savings",
+   "components": [
+    "Savings – Offers"
+   ],
+   "key": "PB2B-8"
+  },
+  "AI Assistant": {
+   "route": "/assistant",
+   "components": [
+    "AI Assistant – Chat"
+   ],
+   "key": "PB2B-9"
+  },
+  "Disruptions": {
+   "route": "/disruptions",
+   "components": [
+    "Disruptions – Alerts"
+   ],
+   "key": "PB2B-10"
+  },
+  "Wallet & Credit": {
+   "route": "/finance",
+   "components": [
+    "Wallet – Transactions",
+    "Wallet – Credit Requests",
+    "Wallet – Loyalty Points"
+   ],
+   "key": "PB2B-11"
+  },
+  "Reports": {
+   "route": "/finance/reports",
+   "components": [
+    "Reports – Finance Reports"
+   ],
+   "key": "PB2B-12"
+  },
+  "Sub-agents": {
+   "route": "/business/subagents",
+   "components": [
+    "Sub-agents – Accounts",
+    "Sub-agents – Earnings"
+   ],
+   "key": "PB2B-13"
+  },
+  "Markup": {
+   "route": "/business/markup",
+   "components": [
+    "Markup – Rules",
+    "Markup – Earnings"
+   ],
+   "key": "PB2B-14"
+  },
+  "Users": {
+   "route": "/business/users",
+   "components": [
+    "Users – Agent Users"
+   ],
+   "key": "PB2B-15"
+  },
+  "Cross-module": {
+   "route": "",
+   "components": [
+    "Cross-module – UI Text",
+    "Cross-module – Common Screens"
+   ],
+   "key": "PB2B-16"
+  }
+ }
+}

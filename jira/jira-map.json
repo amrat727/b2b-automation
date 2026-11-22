@@ -1,0 +1,142 @@
+{
+ "B2B-001": {
+  "key": "PB2B-17",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-17",
+  "epic": "PB2B-15",
+  "component": "Users – Agent Users",
+  "shots": 1
+ },
+ "B2B-002": {
+  "key": "PB2B-18",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-18",
+  "epic": "PB2B-16",
+  "component": "Cross-module – Common Screens",
+  "shots": 2
+ },
+ "B2B-003": {
+  "key": "PB2B-19",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-19",
+  "epic": "PB2B-3",
+  "component": "Search – Cart & Checkout",
+  "shots": 1
+ },
+ "B2B-004": {
+  "key": "PB2B-20",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-20",
+  "epic": "PB2B-11",
+  "component": "Wallet – Transactions",
+  "shots": 1
+ },
+ "B2B-005": {
+  "key": "PB2B-21",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-21",
+  "epic": "PB2B-4",
+  "component": "Bookings – Booking Detail",
+  "shots": 2
+ },
+ "B2B-006": {
+  "key": "PB2B-22",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-22",
+  "epic": "PB2B-4",
+  "component": "Bookings – Cancellation & Amendments",
+  "shots": 2
+ },
+ "B2B-007": {
+  "key": "PB2B-23",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-23",
+  "epic": "PB2B-16",
+  "component": "Cross-module – UI Text",
+  "shots": 2
+ },
+ "B2B-008": {
+  "key": "PB2B-24",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-24",
+  "epic": "PB2B-16",
+  "component": "Cross-module – Common Screens",
+  "shots": 1
+ },
+ "B2B-009": {
+  "key": "PB2B-25",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-25",
+  "epic": "PB2B-3",
+  "component": "Search – Flights",
+  "shots": 1
+ },
+ "B2B-010": {
+  "key": "PB2B-26",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-26",
+  "epic": "PB2B-3",
+  "component": "Search – Rail",
+  "shots": 2
+ },
+ "B2B-011": {
+  "key": "PB2B-27",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-27",
+  "epic": "PB2B-4",
+  "component": "Bookings – Booking Detail",
+  "shots": 2
+ },
+ "B2B-012": {
+  "key": "PB2B-28",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-28",
+  "epic": "PB2B-4",
+  "component": "Bookings – Vouchers & Documents",
+  "shots": 1
+ },
+ "B2B-013": {
+  "key": "PB2B-29",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-29",
+  "epic": "PB2B-15",
+  "component": "Users – Agent Users",
+  "shots": 1
+ },
+ "B2B-014": {
+  "key": "PB2B-30",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-30",
+  "epic": "PB2B-13",
+  "component": "Sub-agents – Accounts",
+  "shots": 1
+ },
+ "B2B-015": {
+  "key": "PB2B-31",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-31",
+  "epic": "PB2B-14",
+  "component": "Markup – Rules",
+  "shots": 2
+ },
+ "B2B-016": {
+  "key": "PB2B-32",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-32",
+  "epic": "PB2B-11",
+  "component": "Wallet – Credit Requests",
+  "shots": 1
+ },
+ "B2B-017": {
+  "key": "PB2B-33",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-33",
+  "epic": "PB2B-12",
+  "component": "Reports – Finance Reports",
+  "shots": 1
+ },
+ "B2B-018": {
+  "key": "PB2B-34",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-34",
+  "epic": "PB2B-15",
+  "component": "Users – Agent Users",
+  "shots": 1
+ },
+ "B2B-019": {
+  "key": "PB2B-35",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-35",
+  "epic": "PB2B-4",
+  "component": "Bookings – List",
+  "shots": 1
+ },
+ "B2B-020": {
+  "key": "PB2B-36",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-36",
+  "epic": "PB2B-4",
+  "component": "Bookings – Booking Detail",
+  "shots": 1
+ }
+}

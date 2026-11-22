@@ -9,12 +9,17 @@
     "test:login": "playwright test --project=login",
     "test:booking": "playwright test --project=booking --workers=1",
     "report": "playwright show-report",
-    "typecheck": "tsc -p ."
+    "typecheck": "tsc -p .",
+    "test:pages": "playwright test --project=pages",
+    "test:search": "playwright test --project=search",
+    "test:forms": "playwright test --project=forms",
+    "test:readonly": "playwright test --project=login --project=pages --project=search --project=forms"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
     "@types/node": "^18.19.130",
     "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
     "typescript": "^5.6.3"
   }
 }

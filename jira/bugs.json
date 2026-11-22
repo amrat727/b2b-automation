@@ -1,0 +1,330 @@
+[
+ {
+  "id": "B2B-001",
+  "epic": "Users",
+  "component": "Users – Agent Users",
+  "priority": "Medium",
+  "type": "Validation",
+  "title": "Add a user: an empty Save shows only \"Enter the person's name.\" - Sign-in ID and Password (also required) get no message",
+  "screen": "Users > Add user",
+  "steps": "1. Users > Add user\n2. Leave every field empty\n3. Click Add user",
+  "actual": "One banner \"Enter the person's name.\" at the bottom. Sign-in ID * and Password * are not marked and have no message; the user only learns about them one by one.",
+  "expected": "Every required field (Name, Sign-in ID, Password) is marked red with its own message at the same time (like Add sub-agent shows a message per field).",
+  "tc": "sweep: Users form",
+  "shots": [
+   "screenshots/sweep/Users-form.png"
+  ]
+ },
+ {
+  "id": "B2B-002",
+  "epic": "Cross-module",
+  "component": "Cross-module – Common Screens",
+  "priority": "Low",
+  "type": "Inconsistency",
+  "title": "Required-field messages look different on every form: \"Required\" under each field (Add sub-agent) vs one banner \"Enter the person's name.\" (Add user)",
+  "screen": "Sub-agents > Add sub-agent, Users > Add user",
+  "steps": "1. Sub-agents > Add sub-agent > Save with an empty form\n2. Users > Add user > Add user with an empty form",
+  "actual": "Add sub-agent: \"Required\" under each field. Add user: a single red banner with a sentence for the first missing field only.",
+  "expected": "One style everywhere: each missing required field marked red with \"<Field> is required\".",
+  "tc": "sweep: Sub-agents form, Users form",
+  "shots": [
+   "screenshots/sweep/Sub_agents-form.png",
+   "screenshots/sweep/Users-form.png"
+  ]
+ },
+ {
+  "id": "B2B-003",
+  "epic": "Search & Book",
+  "component": "Search – Cart & Checkout",
+  "priority": "Medium",
+  "type": "UX",
+  "title": "Checkout: \"Pay\" stays disabled and nothing says which fields are missing",
+  "screen": "Checkout (hotel)",
+  "steps": "1. Search hotels Dubai > Marina Bay Hotel > Book\n2. On Checkout leave the form empty\n3. Try to click \"Pay AED 2,203.20\"",
+  "actual": "The Pay button is greyed out; no field is marked and no message tells the agent that Email, Mobile, Your reference, guest Title / First name / Last name and the terms tick are still needed.",
+  "expected": "Pay is clickable (or the missing fields are listed); clicking it marks every missing required field with a message.",
+  "tc": "probe-book: checkout empty Pay",
+  "shots": [
+   "screenshots/book/04-checkout-empty-pay.png"
+  ]
+ },
+ {
+  "id": "B2B-004",
+  "epic": "Wallet & Credit",
+  "component": "Wallet – Transactions",
+  "priority": "Medium",
+  "type": "Bug",
+  "title": "Wallet transactions show internal codes (\"Booking chk_9\", \"Refund ldg_25\") instead of the booking number / confirmation",
+  "screen": "Wallet & credit > Transactions",
+  "steps": "1. Book a hotel on the credit line (booking #000009, confirmation PH261121-W4TUYR)\n2. Cancel it\n3. Wallet & credit > Transactions",
+  "actual": "Charge row: \"Credit · Booking · chk_9\"; refund row: \"Credit · Refund · ldg_25\". The booking number #000009 is not shown at all; the charge row has no confirmation number.",
+  "expected": "Both rows show the booking number (#000009) and confirmation (PH261121-W4TUYR) so the agent can match money to bookings and invoices.",
+  "tc": "book-and-cancel journey",
+  "shots": [
+   "screenshots/journey/24-finance-after-cancel.png"
+  ]
+ },
+ {
+  "id": "B2B-005",
+  "epic": "Bookings",
+  "component": "Bookings – Booking Detail",
+  "priority": "Medium",
+  "type": "Bug",
+  "title": "Same booking shows two dates: \"Booked 21 Nov 2026\" in Bookings but \"22 Nov 2026 01:32\" in Wallet transactions (UTC vs local time)",
+  "screen": "Bookings list / detail, Wallet & credit > Transactions",
+  "steps": "1. Book after midnight local time (here 22 Nov 2026 01:32 India time = 21 Nov 20:02 UTC)\n2. Compare Bookings (Booked ...) with Wallet & credit > Transactions",
+  "actual": "Bookings list and detail: \"Booked 21 Nov 2026\"; Wallet transactions: \"22 Nov 2026 01:32\" for the same booking. The confirmation number PH261121-... also carries the UTC date.",
+  "expected": "One date everywhere, in the agent's / company's time zone.",
+  "tc": "book-and-cancel journey",
+  "shots": [
+   "screenshots/journey/05-bookings-list.png",
+   "screenshots/journey/24-finance-after-cancel.png"
+  ]
+ },
+ {
+  "id": "B2B-006",
+  "epic": "Bookings",
+  "component": "Bookings – Cancellation & Amendments",
+  "priority": "Low",
+  "type": "UX",
+  "title": "Cancellation table is ambiguous: \"Free cancellation until 6 Jan\" but the table says no charge until 7 Jan, boundary days appear in two rows, and \"21 Jan → 21 Jan 100%\" is listed twice",
+  "screen": "Checkout > Cancellation & details, Booking > Cancel booking",
+  "steps": "1. Marina Bay Hotel 21-24 Jan 2027 > Book > Cancellation & details (or Cancel booking on the booking)",
+  "actual": "Header \"Free cancellation until 6 Jan 2027\"; rows: Booking → 7 Jan no charge, 7 Jan → 14 Jan 25%, 14 Jan → 19 Jan 50%, 19 Jan → 21 Jan 100%, 21 Jan → 21 Jan 100%. 7, 14 and 19 Jan are in two rows each - the agent cannot tell which charge applies on those days.",
+  "expected": "Rows that do not overlap (e.g. until 6 Jan no charge, 7-13 Jan 25% ...), the same last free day in the header and the table, and no duplicate row.",
+  "tc": "probe-book: Cancellation & details; cancel dialog",
+  "shots": [
+   "screenshots/book/05-checkout-cancellation.png",
+   "screenshots/journey/22-cancel-dialog.png"
+  ]
+ },
+ {
+  "id": "B2B-007",
+  "epic": "Cross-module",
+  "component": "Cross-module – UI Text",
+  "priority": "Low",
+  "type": "UI text",
+  "title": "Buttons and menu items are not Title Case (\"Add user\", \"New booking\", \"Request higher limit\", \"Search & book\") and \"Add a user\" title vs \"Add user\" button",
+  "screen": "whole portal",
+  "steps": "Open the menu and the list screens; read the buttons",
+  "actual": "Sentence case on ~48 buttons / menu items, e.g. menu \"Search & book\", \"Trip builder\", \"My quotations\", \"Package builder\", \"AI assistant\", \"Wallet & credit\", \"Markup earnings\"; buttons \"New booking\", \"New quotation\", \"Build package\", \"Add sub-agent\", \"Add user\", \"Request higher limit\", \"Go to cart\", \"Modify search\", \"New search\", \"Start searching\". The Add user dialog is titled \"Add a user\" while its button says \"Add user\".",
+  "expected": "Title Case for buttons and menu items (\"Search & Book\", \"New Booking\", \"Add User\", \"Request Higher Limit\") and the same wording in dialog title and button - the standard agreed for the ERP.",
+  "tc": "sweep: text audit",
+  "shots": [
+   "screenshots/sweep/Home.png",
+   "screenshots/sweep/Users-form.png"
+  ]
+ },
+ {
+  "id": "B2B-008",
+  "epic": "Cross-module",
+  "component": "Cross-module – Common Screens",
+  "priority": "Low",
+  "type": "Accessibility",
+  "title": "Page titles are not real headings - Bookings, Quotations, Wallet & credit, Users... have no heading element (screen readers and page structure miss them)",
+  "screen": "Bookings, Trip builder, Quotations, My quotations, Package builder, Savings, AI assistant, Disruptions, Wallet & credit, Reports, Sub-agents, Markup, Markup earnings, Users, Profile",
+  "steps": "Open any of these pages and inspect the page title (e.g. \"Bookings\")",
+  "actual": "The big title is plain text - the page has no h1/h2 (0 headings found on 16 pages); only Home and the search pages have headings.",
+  "expected": "Each page title is a heading (h1) so assistive technology, tests and page outline find it.",
+  "tc": "sweep: headings per page",
+  "shots": [
+   "screenshots/sweep/Bookings.png"
+  ],
+  "withdrawn": "22 Nov 2026: raised in error - titles are <h5> headings (sweep looked only for h1-h4); PB2B-24 closed as not-a-bug"
+ },
+ {
+  "id": "B2B-009",
+  "epic": "Search & Book",
+  "component": "Search – Flights",
+  "priority": "High",
+  "type": "Bug",
+  "title": "Flight search always fails: \"The supplier couldn't complete this request — please try again.\" (server answers 502)",
+  "screen": "Search & book > Flights",
+  "steps": "1. Search & book > Flights\n2. From Dubai, To Delhi, departure 29 Nov 2026, 1 passenger, Economy\n3. Search flights and wait for the live search (20-60 s)",
+  "actual": "After \"Comparing fares...\" the page shows \"The supplier couldn't complete this request — please try again.\"; POST /flight/search answers 502. Same on every run (21-22 Nov 2026) - no flight can be found or booked.",
+  "expected": "Flight results (or a clear \"no flights for these dates\" message); the flight supplier connection works for the agent.",
+  "tc": "probe search-types (Flights)",
+  "shots": [
+   "screenshots/search/Flights-results.png"
+  ]
+ },
+ {
+  "id": "B2B-010",
+  "epic": "Search & Book",
+  "component": "Search – Rail",
+  "priority": "Low",
+  "type": "UX",
+  "title": "Cruise and Rail are offered everywhere (tabs, home tiles, module access, sponsored \"Europe by rail\" deal) but booking is not connected",
+  "screen": "Search & book > Rail / Cruise, Home",
+  "steps": "1. Search & book > Rail: London -> Paris, search\n2. Search & book > Cruise: search",
+  "actual": "Rail: \"Rail booking isn't connected yet\" - while the same page shows the sponsored deal \"Europe by rail this winter - Eurostar and TGV... Hold seats for 48 hours at no charge\". Cruise: \"Cruise booking isn't connected yet\". Both stay in the tabs, the home booking tiles and the profile's module access. Server: 503.",
+  "expected": "Hide Cruise / Rail (tabs, tiles, sponsored deals) until they can be booked, or label them \"on request\" from the start.",
+  "tc": "probe search-types (Rail, Cruise)",
+  "shots": [
+   "screenshots/search/Rail-results.png",
+   "screenshots/search/Cruise-results.png"
+  ]
+ },
+ {
+  "id": "B2B-011",
+  "epic": "Bookings",
+  "component": "Bookings – Booking Detail",
+  "priority": "Medium",
+  "type": "Bug",
+  "title": "Payments & summary of a cancelled booking shows only the refund - the original payment from the credit line is missing (\"Paid AED 0.00\")",
+  "screen": "Bookings > #000009 > Payments & summary",
+  "steps": "1. Book a hotel paid from the credit line (AED 2,203.20)\n2. Cancel it (free)\n3. Open the booking > Payments & summary",
+  "actual": "One line only: \"Refund · Credit line · 21 Nov 2026 · rf_90c92516... - AED 2,203.20\"; Total 0.00, Paid 0.00, Balance 0.00. The AED 2,203.20 charge to the credit line is not listed, so a refund appears for money that was never paid. (The refund is dated 21 Nov here but 22 Nov 01:36 in History - see the date bug.)",
+  "expected": "Both movements: the payment +AED 2,203.20 (credit line, booking date) and the refund -AED 2,203.20, with readable references (booking / confirmation number instead of rf_... ids).",
+  "tc": "booking-tabs probe",
+  "shots": [
+   "screenshots/bookings/_Payments_summary_.png",
+   "screenshots/bookings/_History_.png"
+  ]
+ },
+ {
+  "id": "B2B-012",
+  "epic": "Bookings",
+  "component": "Bookings – Vouchers & Documents",
+  "priority": "Medium",
+  "type": "Bug",
+  "title": "A Service voucher and a Booking confirmation can still be produced for a CANCELLED booking",
+  "screen": "Bookings > #000009 (Cancelled) > Documents",
+  "steps": "1. Open a cancelled booking (#000009)\n2. Documents > Service voucher (or Booking confirmation) > View",
+  "actual": "The document is generated (\"Voucher 000009.pdf\" / \"Booking confirmation 000009.pdf\", POST /documents/render 200). Receipt is disabled, but voucher and confirmation are not - the agent could hand a valid-looking voucher to a guest for a cancelled stay.",
+  "expected": "Voucher and booking confirmation are disabled for cancelled services (or clearly marked CANCELLED); the credit note stays available.",
+  "tc": "doc-view probe",
+  "shots": [
+   "screenshots/bookings/doc-view-click.png"
+  ]
+ },
+ {
+  "id": "B2B-013",
+  "epic": "Users",
+  "component": "Users – Agent Users",
+  "priority": "Medium",
+  "type": "Validation",
+  "title": "Add a user accepts an invalid email (\"not-an-email\") and sends it to the server",
+  "screen": "Users > Add user",
+  "steps": "1. Users > Add user\n2. Name, Sign-in ID, a valid password, Email = not-an-email\n3. Add user",
+  "actual": "No message on Email; the form sends {\"email\":\"not-an-email\", ...} to POST /agency-users (blocked by the test - nothing was created).",
+  "expected": "\"Enter a valid email address\" under Email; nothing is sent.",
+  "tc": "forms probe",
+  "shots": [
+   "screenshots/forms/add-user-valid-password-bad-email.png"
+  ]
+ },
+ {
+  "id": "B2B-014",
+  "epic": "Sub-agents",
+  "component": "Sub-agents – Accounts",
+  "priority": "Medium",
+  "type": "Validation",
+  "title": "Add sub-agent accepts an invalid email (\"not-an-email\") and sends it to the server",
+  "screen": "Sub-agents > Add sub-agent",
+  "steps": "1. Sub-agents > Add sub-agent\n2. Agency name, Contact person, Sign-in ID, a valid password, Email = not-an-email\n3. Save",
+  "actual": "No message on Email; the form sends {\"email\":\"not-an-email\", ...} to POST /subagents (blocked by the test - nothing was created).",
+  "expected": "\"Enter a valid email address\"; nothing is sent.",
+  "tc": "forms probe",
+  "shots": [
+   "screenshots/forms/add-subagent-valid-except-bad-email.png"
+  ]
+ },
+ {
+  "id": "B2B-015",
+  "epic": "Markup",
+  "component": "Markup – Rules",
+  "priority": "High",
+  "type": "Validation",
+  "title": "Markup accepts a NEGATIVE value (-10 %) and absurd values (1000 %) - selling below cost is possible",
+  "screen": "Markup > My customers > All products",
+  "steps": "1. Markup > My customers\n2. All products: type -10 (then 1000) as % markup\n3. Save",
+  "actual": "No message; the page sends PUT /markup {\"type\":\"Percentage\",\"value\":-10} and {\"value\":1000} (blocked by the test - nothing was saved).",
+  "expected": "Markup cannot be negative and a sensible maximum (agreed with the business) is enforced, with a clear message.",
+  "tc": "forms probe",
+  "shots": [
+   "screenshots/forms/markup--10.png",
+   "screenshots/forms/markup-1000.png"
+  ]
+ },
+ {
+  "id": "B2B-016",
+  "epic": "Wallet & Credit",
+  "component": "Wallet – Credit Requests",
+  "priority": "Low",
+  "type": "UX",
+  "title": "Request higher limit: 0, a negative amount or a limit below the current one only greys out the button - no message why",
+  "screen": "Wallet & credit > Request higher limit",
+  "steps": "1. Wallet & credit > Request higher limit\n2. New limit = 0, then -500, then 1000 (current limit 50,000)",
+  "actual": "The send button just becomes disabled; nothing says the new limit must be higher than AED 50,000.00.",
+  "expected": "A message under New limit, e.g. \"Enter a limit higher than your current AED 50,000.00\".",
+  "tc": "forms probe",
+  "shots": [
+   "screenshots/forms/credit-request--500.png"
+  ]
+ },
+ {
+  "id": "B2B-017",
+  "epic": "Reports",
+  "component": "Reports – Finance Reports",
+  "priority": "Medium",
+  "type": "Bug",
+  "title": "Reports shows made-up \"sample\" margins (incl. a Visa line) and Export downloads nothing",
+  "screen": "Reports (menu) > Product-line performance",
+  "steps": "1. Reports > Product-line performance\n2. Click Export",
+  "actual": "\"Sample figures - live reporting isn't connected yet.\" with fixed margins Flights 11.0 %, Hotels 13.8 %, Packages 17.9 %, Activities 21.7 %, Visa 19.0 %, Transfers 23.2 % for an agent with no completed booking (Visa is not a product). Export: no file and no message.",
+  "expected": "Real figures from the agent's own bookings (or an empty state) and a working Export - or hide the report until it is connected.",
+  "tc": "other probe",
+  "shots": [
+   "screenshots/other/reports-export.png"
+  ]
+ },
+ {
+  "id": "B2B-018",
+  "epic": "Users",
+  "component": "Users – Agent Users",
+  "priority": "Low",
+  "type": "Bug",
+  "title": "Users list shows \"Last sign-in —\" for an agent that signs in every day",
+  "screen": "Users",
+  "steps": "1. Sign in as the QA agent (done many times on 21-22 Nov 2026)\n2. Open Users",
+  "actual": "QA Auto B2B Agent (you): \"Last sign-in —\".",
+  "expected": "The date and time of the last sign-in.",
+  "tc": "other probe",
+  "shots": [
+   "screenshots/other/users.png"
+  ]
+ },
+ {
+  "id": "B2B-019",
+  "epic": "Bookings",
+  "component": "Bookings – List",
+  "priority": "Medium",
+  "type": "Bug",
+  "title": "A booking that was just confirmed and charged is missing from Bookings (\"0 upcoming\") - the list shows it only after reloading",
+  "screen": "Bookings",
+  "steps": "1. Book a hotel and pay from the credit line (\"Booking confirmed\")\n2. Open Bookings right away (menu or \"Bookings\" button)\n3. Wait on the page",
+  "actual": "The header already shows the credit charged (Credit AED 47,796.80) but Bookings says \"0 upcoming · 2 in all\" / \"No upcoming bookings.\" The list does not refresh by itself; the booking appears only after reloading the page (seen on 3 automated runs, 22 Nov 2026).",
+  "expected": "The new booking is listed as soon as it is confirmed (or the list refreshes on its own).",
+  "tc": "tests/booking/hotel-booking.spec.ts TC-BOOK-05",
+  "shots": [
+   "screenshots/evidence/B2B-019-new-booking-missing-after-confirm.png"
+  ]
+ },
+ {
+  "id": "B2B-020",
+  "epic": "Bookings",
+  "component": "Bookings – Booking Detail",
+  "priority": "High",
+  "type": "Bug",
+  "title": "Right after a cancellation the booking page still shows \"Confirmed\" and \"Still to pay AED 2,203.20\" (although the credit was already refunded)",
+  "screen": "Bookings > booking detail",
+  "steps": "1. Book a hotel on the credit line (AED 2,203.20)\n2. Cancel booking > accept charges (AED 0.00) and cancel - \"Cancelled - AED 2,203.20 is back in your account\"\n3. Open / reload the booking page",
+  "actual": "For about a minute or more after the cancellation the page shows: status Confirmed (booking and hotel), \"AED 0.00 paid\", \"Still to pay AED 2,203.20\", Modify booking and Add service active (Cancel booking disabled) - while the header already shows Credit AED 50,000.00 (refunded). Later it switches to Cancelled. Seen on booking #000017, 22 Nov 2026.",
+  "expected": "As soon as the cancellation is confirmed the page shows Cancelled, nothing still to pay, and no Modify / Add service.",
+  "tc": "tests/booking/hotel-booking.spec.ts TC-BOOK-08",
+  "shots": [
+   "screenshots/evidence/B2B-019-cancelled-booking-still-confirmed.png"
+  ]
+ }
+]

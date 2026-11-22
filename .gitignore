@@ -4,3 +4,6 @@ playwright/.auth/
 test-results/
 playwright-report/
 screenshots/
+# run logs written by probes / test runs
+reports/*.txt
+reports/sweep.json
