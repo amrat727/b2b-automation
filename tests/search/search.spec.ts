@@ -67,16 +67,39 @@ test.describe('Search & Book', () => {
     await expect(page.getByText('Destination is required')).toBeVisible();
   });
 
-  test('TC-SRCH-06: Rail / Cruise tabs are only offered when they can be booked', async ({ page }) => {
-    test.fail(true, 'B2B-010 (PB2B-26): Rail and Cruise are offered (tabs, tiles, sponsored deals) but "booking isn\'t connected yet"');
-    await page.goto('/search/rail');
-    for (const [ph, v] of [['Station or city, e.g. London', 'London'], ['Station or city, e.g. Paris', 'Paris']]) {
-      const box = page.getByPlaceholder(ph); await box.click(); await box.pressSequentially(v, { delay: 60 });
-      await page.getByRole('option').first().click({ timeout: 5_000 }).catch(() => {});
+  test('TC-SRCH-06: Rail / Cruise tabs follow the agent\'s portal access (ERP: Cruise + Rail are ON for the QA agent)', async ({ page }) => {
+    // product owner (Q-04, 22 Nov 2026): Cruise / Rail are not connected yet, but they ARE shown when the agent has the
+    // access in the ERP (Agent > Access > Portal menus). The QA agent AG-00035 has both ON -> the tabs must be there.
+    await page.goto('/search/hotel');
+    for (const tab of ['Cruise', 'Rail']) await expect(page.getByRole('link', { name: tab }).or(page.getByRole('tab', { name: tab })).or(page.getByRole('button', { name: tab, exact: true })).first()).toBeVisible({ timeout: 60_000 });
+  });
+
+  test('TC-SRCH-07: Cancellation table - periods do not overlap (no charge until 7 Jan -> next period starts 8 Jan)', async ({ page }) => {
+    test.fail(true, 'PB2B-22: each period starts on the day the previous one ends (7 Jan -> 7 Jan) - product owner (Q-03): next row must start the day after');
+    await searchHotels(page, IN, OUT);
+    const card = page.locator('div').filter({ hasText: 'Marina Bay Hotel' }).filter({ has: page.getByRole('button', { name: /See \d+ rooms/ }) }).last();
+    await card.getByRole('button', { name: /See \d+ rooms/ }).click();
+    // first room -> Book -> checkout "Cancellation & details" (opening checkout saves nothing; every write is blocked)
+    await page.getByRole('button', { name: 'Book', exact: true }).first().click();
+    await page.getByRole('button', { name: 'Cancellation & details' }).first().click({ timeout: 60_000 });
+    const dlg = page.getByRole('dialog').filter({ hasText: 'Deduction' }).last();
+    await expect(dlg).toBeVisible({ timeout: 15_000 });
+    const rows = await dlg.locator('tr').filter({ hasNot: page.locator('th') }).evaluateAll(trs => trs.map(tr => [...tr.querySelectorAll('td')].map(td => (td.textContent || '').trim())));
+    test.info().annotations.push({ type: 'cancellation table', description: rows.map(r => r.join(' | ')).join(' ; ') });
+    const day = (s: string) => new Date(`${s} 12:00`).getTime();
+    for (let i = 1; i < rows.length; i++) {
+      const prevTo = rows[i - 1][1], from = rows[i][0];
+      if (!/\d{4}/.test(prevTo) || !/\d{4}/.test(from)) continue;   // "Booking" / "Travel date"
+      expect(day(from) - day(prevTo), `row ${i + 1} starts ${from} - previous row ends ${prevTo}`).toBe(864e5);
     }
-    await page.getByRole('button', { name: 'Search rail' }).click();
-    // wait until the live search has finished (results or the "not connected" notice), then judge
-    await expect.poll(() => pageText(page), { timeout: 90_000 }).toMatch(/isn't connected yet|\d+ (journeys|trains|results|options)/);
-    expect(await pageText(page)).not.toContain("Rail booking isn't connected yet");
+  });
+
+  test('TC-SRCH-08: Flights - typing "Dubai" offers DXB (Dubai International) first', async ({ page }) => {
+    test.fail(true, 'B2B-021 (PB2B-37): "Dubai" offers DWC (Al Maktoum) first and DXB second - product owner (Q-16): raise as bug');
+    await page.goto('/search/flight');
+    const box = page.getByPlaceholder('Enter origin');
+    await box.click(); await box.pressSequentially('Dubai', { delay: 80 });
+    await expect(page.getByRole('option').first()).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByRole('option').first()).toContainText('DXB');
   });
 });

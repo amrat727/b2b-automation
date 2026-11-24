@@ -138,5 +138,12 @@
   "epic": "PB2B-4",
   "component": "Bookings – Booking Detail",
   "shots": 1
+ },
+ "B2B-021": {
+  "key": "PB2B-37",
+  "url": "https://piloterp.atlassian.net/browse/PB2B-37",
+  "epic": "PB2B-3",
+  "component": "Search – Flights",
+  "shots": 1
  }
 }

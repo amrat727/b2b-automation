@@ -19,6 +19,7 @@ test.describe('Booking journey - hotel on credit line', () => {
   let bookingNo = '';       // "#000010"
   let confirmation = '';    // "PH2611..-XXXXXX"
   let bookingUrl = '';
+  let listReloads = -1, statusReloads = -1;   // reloads needed before the list / the status was up to date (B2B-019 / B2B-020)
 
   test.beforeAll(async ({ browser }) => { page = await browser.newPage(); });
   test.afterAll(async () => {
@@ -104,6 +105,7 @@ test.describe('Booking journey - hotel on credit line', () => {
     // B2B-019: a just-confirmed booking is not in the list on the first load (and the list does not refresh) -> reload until it shows
     const t0 = Date.now(); let reloads = 0;
     while (!(await name.isVisible({ timeout: 5_000 }).catch(() => false)) && Date.now() - t0 < 180_000) { await page.waitForTimeout(5_000); await page.reload().catch(() => page.waitForTimeout(10_000)); reloads++; }   // a network blip must not fail the step
+    listReloads = reloads;
     test.info().annotations.push({ type: 'B2B-019 list delay', description: `booking listed after ${reloads} reload(s), ${Math.round((Date.now() - t0) / 1000)} s` });
     await expect(name).toBeVisible({ timeout: 10_000 });
     // list row text: "21 Jan #000010 Booked 21 Nov Mr QA Lead Auto XXXXXX 2 adults 21 – 24 Jan 2027 ... Hotel Confirmed AED 2,203.20 On credit line"
@@ -115,6 +117,12 @@ test.describe('Booking journey - hotel on credit line', () => {
     await page.waitForURL(/\/bookings\/\d+/, { timeout: 60_000 });
     bookingUrl = page.url();
     await expect.poll(() => pageText(page)).toContain(confirmation);
+  });
+
+  test('TC-BOOK-05b: the new booking is in the list straight away (no reload needed)', async () => {
+    // product owner (Q-12, 22 Nov 2026): a new booking must show immediately
+    test.fail(true, 'B2B-019 (PB2B-35): the new booking is missing from Bookings until the page is reloaded');
+    expect(listReloads, 'reloads needed before the booking was listed').toBe(0);
   });
 
   test('TC-BOOK-06: credit available went down by the price and a charge transaction is listed', async () => {
@@ -146,9 +154,16 @@ test.describe('Booking journey - hotel on credit line', () => {
     await page.goto(bookingUrl);
     const shows = async () => { await page.getByText(bookingNo).first().waitFor({ timeout: 30_000 }).catch(() => {}); return new RegExp(`Cancelled ${bookingNo}`).test(await pageText(page)); };
     while (!(await shows()) && Date.now() - t0 < 240_000) { await page.waitForTimeout(5_000); await page.reload({ waitUntil: 'load' }).catch(() => {}); reloads++; }
+    statusReloads = reloads;
     test.info().annotations.push({ type: 'B2B-020 status delay', description: `"Cancelled" shown after ${reloads} reload(s), ${Math.round((Date.now() - t0) / 1000)} s` });
     await expect.poll(() => pageText(page), { timeout: 30_000 }).toMatch(new RegExp(`Cancelled ${bookingNo}`));
     await expect(page.getByRole('button', { name: 'Cancel booking', exact: true })).toBeDisabled();
+  });
+
+  test('TC-BOOK-08b: the booking shows "Cancelled" straight after the cancellation (no reload needed)', async () => {
+    // product owner (Q-12, 22 Nov 2026): a cancellation must show immediately
+    test.fail(true, 'B2B-020 (PB2B-36): the booking page keeps showing "Confirmed" / "Still to pay" after the cancellation');
+    expect(statusReloads, 'reloads needed before "Cancelled" was shown').toBe(0);
   });
 
   test('TC-BOOK-09: credit is restored and a refund transaction names the confirmation', async () => {
@@ -169,11 +184,11 @@ test.describe('Booking journey - hotel on credit line', () => {
     await expect(dlg).toContainText(/Paid\W*AED\W*2,203\.20/);
   });
 
-  test('TC-BOOK-11: a cancelled booking offers no voucher', async () => {
-    test.fail(true, 'B2B-012 (PB2B-28): Service voucher is still produced for the cancelled booking');
+  test('TC-BOOK-11: a cancelled booking still offers the invoice and the voucher', async () => {
+    // product owner (Q-09, 22 Nov 2026): invoice and voucher stay available for a cancelled booking (PB2B-28 withdrawn)
     await page.goto(bookingUrl);
     await page.getByRole('button', { name: 'Documents', exact: true }).click({ timeout: 60_000 });
     const dlg = page.locator('[role=dialog]').last();
-    await expect(dlg.getByRole('button', { name: 'Service voucher', exact: true })).toBeDisabled();
+    for (const d of ['Service voucher', 'Customer invoice', 'Agent invoice']) await expect(dlg.getByRole('button', { name: d, exact: true })).toBeEnabled();
   });
 });

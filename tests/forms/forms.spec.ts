@@ -70,22 +70,45 @@ test.describe('Forms - validation (nothing is saved)', () => {
     expect(blocked, 'the invalid email was sent').toEqual([]);
   });
 
-  test('TC-FORM-06: Markup - a negative markup cannot be saved', async ({ page }) => {
-    test.fail(true, 'B2B-015 (PB2B-31): -10 % is sent with PUT /markup');
+  // product owner (Q-01, 22 Nov 2026): a markup must be above 0 and at most 1000 %
+  const tryMarkup = async (page: Page, v: string) => {
     await page.goto('/business/markup');
     const pct = page.locator('input[type=number]').filter({ visible: true }).first();
-    await pct.fill('-10', { timeout: 60_000 });
-    await page.getByRole('button', { name: /^Save$/ }).click();
+    await pct.fill(v, { timeout: 60_000 });
+    const save = page.getByRole('button', { name: /^Save$/ }).first();
+    if (await save.isEnabled()) await save.click();
     await page.waitForTimeout(1500);
-    expect(blocked.filter(b => /markup/.test(b)), 'negative markup was sent').toEqual([]);
+    return blocked.filter(b => /markup/.test(b)).length > 0;     // true = the value was sent (the form accepted it)
+  };
+  for (const v of ['-10', '0', '1001']) {
+    test(`TC-FORM-06: Markup ${v} % is refused (must be above 0 and at most 1000 %)`, async ({ page }) => {
+      test.fail(true, `B2B-015 (PB2B-31): ${v} % is sent with PUT /markup (no minimum / maximum check)`);
+      expect(await tryMarkup(page, v), `markup ${v} % was sent`).toBe(false);
+    });
+  }
+  test('TC-FORM-06: Markup 1000 % (the maximum) is accepted', async ({ page }) => {
+    expect(await tryMarkup(page, '1000'), 'markup 1000 % was not sent').toBe(true);
   });
 
-  test('TC-FORM-07: Request higher limit - a limit not above the current one is explained', async ({ page }) => {
-    test.fail(true, 'B2B-016 (PB2B-32): the send button is only greyed out, no message');
+  // product owner (Q-08, 22 Nov 2026): the agent may ask for ANY limit - also lower than today - but not negative, at most 1,000,000
+  const limitSend = async (page: Page, v: string) => {
     await open(page, '/finance', 'Request higher limit');
-    await page.locator('input[type=number]').filter({ visible: true }).first().fill('1000');
-    await expect(page.getByText(/higher than|more than|above/i)).toBeVisible({ timeout: 5_000 });
-  });
+    await page.locator('input[type=number]').filter({ visible: true }).first().fill(v);
+    await page.waitForTimeout(800);
+    return page.getByRole('button', { name: /^(Send request|Request|Submit|Send)/ }).filter({ visible: true }).last();
+  };
+  for (const v of ['1000', '1000000']) {
+    test(`TC-FORM-07: Credit limit request ${v} can be sent (any limit up to 1,000,000)`, async ({ page }) => {
+      if (v === '1000') test.fail(true, 'B2B-016 (PB2B-32): a limit lower than the current 50,000 only greys out the send button');
+      await expect(await limitSend(page, v)).toBeEnabled();
+    });
+  }
+  for (const v of ['-500', '1000001']) {
+    test(`TC-FORM-07: Credit limit request ${v} is refused`, async ({ page }) => {
+      if (v === '1000001') test.fail(true, 'B2B-016 (PB2B-32): 1,000,001 can be sent - the maximum is 1,000,000');
+      await expect(await limitSend(page, v)).toBeDisabled();
+    });
+  }
 
   test('TC-FORM-08: Build package - empty search asks for a destination', async ({ page }) => {
     await open(page, '/packages', 'Build package');

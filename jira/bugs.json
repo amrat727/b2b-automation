@@ -163,7 +163,8 @@
   "shots": [
    "screenshots/search/Rail-results.png",
    "screenshots/search/Cruise-results.png"
-  ]
+  ],
+  "withdrawn": "22 Nov 2026: not a bug (product owner answer)"
  },
  {
   "id": "B2B-011",
@@ -196,7 +197,8 @@
   "tc": "doc-view probe",
   "shots": [
    "screenshots/bookings/doc-view-click.png"
-  ]
+  ],
+  "withdrawn": "22 Nov 2026: not a bug (product owner answer)"
  },
  {
   "id": "B2B-013",
@@ -325,6 +327,22 @@
   "tc": "tests/booking/hotel-booking.spec.ts TC-BOOK-08",
   "shots": [
    "screenshots/evidence/B2B-019-cancelled-booking-still-confirmed.png"
+  ]
+ },
+ {
+  "id": "B2B-021",
+  "epic": "Search & Book",
+  "component": "Search – Flights",
+  "priority": "Low",
+  "type": "Bug",
+  "title": "Flight search: typing \"Dubai\" offers DWC (Al Maktoum) first - DXB (Dubai International) should come first",
+  "screen": "Search & book > Flights",
+  "steps": "1. Search & book > Flights\n2. Click \"Enter origin\" and type Dubai",
+  "actual": "The first option is \"DWC — Al Maktoum International Airport, Dubai\", DXB comes second - an agent who picks the first option searches from the wrong airport.",
+  "expected": "\"DXB — Dubai International Airport\" first (product owner, answer to Q-16 on 22 Nov 2026: raise as bug).",
+  "tc": "TC-SRCH-08",
+  "shots": [
+   "screenshots/answers/B2B-021-dubai-dwc-first.png"
   ]
  }
 ]

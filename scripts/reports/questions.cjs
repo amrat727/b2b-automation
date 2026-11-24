@@ -1,12 +1,13 @@
 /*
  * B2B portal - open questions for the product owner (understanding gaps found while testing).
- *   node scripts/reports/questions.cjs   ->  reports/B2B-Questions.xlsx
+ *   node scripts/reports/questions.cjs   ->  reports/B2B-Questions/B2B-Questions.xlsx (+ screenshots/, one per question)
  * Answers typed into the "Answer" column of an existing file are kept when the file is rebuilt.
  */
 const ExcelJS = require('exceljs');
 const fs = require('fs');
 const path = require('path');
-const OUT = path.join(__dirname, '..', '..', 'reports', 'B2B-Questions.xlsx');
+const OUT = path.join(__dirname, '..', '..', 'reports', 'B2B-Questions', 'B2B-Questions.xlsx');
+const OLD = path.join(__dirname, '..', '..', 'reports', 'B2B-Questions.xlsx'); // earlier single file (answers are carried over)
 
 const Q = [
   ['Q-01', 'Markup', 'What range may a markup have? Can it be negative or 0, and is there a maximum (%) or a cap in AED?',
@@ -45,28 +46,65 @@ const Q = [
     'Portal uses sentence case ("Add user", "New booking", "Search & book"); dialog "Add a user" vs button "Add user".', 'Assumed yes (raised as a low bug).', 'PB2B-23'],
 ];
 
+// screenshot per question (from the test runs in screenshots/; Q-16 from scripts/probes/capture-question-shots.mjs)
+const SHOTS = {
+  "Q-01": "forms/markup--10.png",
+  "Q-02": "book/02-rooms.png",
+  "Q-03": "book/05-checkout-cancellation.png",
+  "Q-04": "search/Rail-results.png",
+  "Q-05": "search/Flights-results.png",
+  "Q-06": "journey/03-after-pay.png",
+  "Q-07": "other/reports.png",
+  "Q-08": "forms/credit-request-0.png",
+  "Q-09": "bookings/Documents.png",
+  "Q-10": "other/users.png",
+  "Q-11": "sweep/Sub_agents-form.png",
+  "Q-12": "evidence/B2B-019-cancelled-booking-still-confirmed.png",
+  "Q-13": "journey/24-finance-after-cancel.png",
+  "Q-14": "sweep/Wallet_credit.png",
+  "Q-15": "sweep/Search_hotels.png",
+  "Q-16": null,
+  "Q-17": "sweep/Users-form.png"
+};
+const DIR = path.dirname(OUT), SHOT_DIR = path.join(DIR, 'screenshots');
+
 (async () => {
-  // keep answers already typed in an existing file
+  fs.mkdirSync(SHOT_DIR, { recursive: true });
+  // keep answers already typed (new file, or the old single file reports/B2B-Questions.xlsx)
   const old = {};
-  if (fs.existsSync(OUT)) {
-    const wb0 = new ExcelJS.Workbook(); await wb0.xlsx.readFile(OUT);
-    wb0.getWorksheet('Questions')?.eachRow((r, i) => { if (i > 1) old[r.getCell(1).text] = { a: r.getCell(7).text, by: r.getCell(8).text, d: r.getCell(9).text }; });
+  for (const f of [OLD, OUT].filter(fs.existsSync)) {
+    const wb0 = new ExcelJS.Workbook(); await wb0.xlsx.readFile(f);
+    const ws0 = wb0.getWorksheet('Questions');
+    const ansCol = f === OLD ? 7 : 7, first = f === OLD ? 2 : 5;
+    ws0?.eachRow((r, i) => { if (i >= first && /^Q-d+/.test(r.getCell(1).text) && r.getCell(ansCol).text) old[r.getCell(1).text] = { a: r.getCell(ansCol).text, by: r.getCell(ansCol + 3).text }; });
   }
+  const font = { name: 'Arial', size: 10 };
+  const border = { top: { style: 'thin', color: { argb: 'FFBFBFBF' } }, left: { style: 'thin', color: { argb: 'FFBFBFBF' } }, bottom: { style: 'thin', color: { argb: 'FFBFBFBF' } }, right: { style: 'thin', color: { argb: 'FFBFBFBF' } } };
   const wb = new ExcelJS.Workbook(); wb.creator = 'QA Automation (Playwright)';
-  const ws = wb.addWorksheet('Questions', { views: [{ state: 'frozen', ySplit: 1 }] });
-  ws.columns = [
-    { header: 'Q-ID', width: 7 }, { header: 'Module', width: 22 }, { header: 'Question', width: 60 }, { header: 'What we saw', width: 55 },
-    { header: 'Our assumption until answered', width: 38 }, { header: 'Related Jira', width: 16 }, { header: 'Answer', width: 50 }, { header: 'Answered by', width: 16 }, { header: 'Date', width: 12 },
-  ];
-  ws.getRow(1).eachCell(c => { c.font = { bold: true, color: { argb: 'FFFFFFFF' } }; c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1F4E79' } }; c.alignment = { vertical: 'middle', wrapText: true }; });
-  for (const q of Q) {
+  const ws = wb.addWorksheet('Questions', { views: [{ state: 'frozen', xSplit: 2, ySplit: 4 }] });
+  ws.columns = [{ width: 8 }, { width: 20 }, { width: 46 }, { width: 38 }, { width: 30 }, { width: 14 }, { width: 40 }, { width: 60 }, { width: 30 }, { width: 14 }];
+  ws.mergeCells('A1:J1'); ws.getCell('A1').value = 'Pilot B2B Agent Portal - questions for the product owner'; ws.getCell('A1').font = { name: 'Arial', size: 14, bold: true };
+  ws.mergeCells('A2:J2'); ws.getCell('A2').value = 'Date: 22-Nov-2026   |   Please write your answer in the yellow "Your answer" column. Each answer becomes new automated test scenarios.';
+  ws.getCell('A2').font = { ...font, italic: true, color: { argb: 'FF595959' } };
+  const hr = ws.getRow(4);
+  ['ID', 'Module', 'Question', 'What we saw', 'Our assumption until answered', 'Related Jira', 'Your answer', 'Screenshot', 'Screenshot file', 'Answered by'].forEach((h, i) => { const c = hr.getCell(i + 1); c.value = h; c.font = { ...font, bold: true, color: { argb: 'FFFFFFFF' } }; c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1F3864' } }; c.border = border; c.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }; });
+  Q.forEach((q, i) => {
+    const r = ws.getRow(5 + i);
+    // screenshot: copy next to the workbook as Q-NN-<name>.png so the link works
+    let name = fs.readdirSync(SHOT_DIR).find(f => f.startsWith(q[0] + '-'));
+    if (SHOTS[q[0]]) { name = `${q[0]}-${path.basename(SHOTS[q[0]]).replace(/^[-_]+/, '')}`; fs.copyFileSync(path.join(__dirname, '..', '..', 'screenshots', SHOTS[q[0]]), path.join(SHOT_DIR, name)); }
     const o = old[q[0]] ?? {};
-    const row = ws.addRow([...q, o.a ?? '', o.by ?? '', o.d ?? '']);
-    row.alignment = { vertical: 'top', wrapText: true };
-    row.getCell(7).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF2CC' } };
-  }
-  ws.autoFilter = { from: 'A1', to: `I${Q.length + 1}` };
-  fs.mkdirSync(path.dirname(OUT), { recursive: true });
+    r.values = [...q, o.a ?? '', name ? '' : 'no screenshot', name ?? '-', o.by ?? ''];
+    r.eachCell({ includeEmpty: true }, (c, col) => { c.font = font; c.border = border; c.alignment = { vertical: 'top', wrapText: true, horizontal: col === 1 ? 'center' : 'left' }; });
+    r.getCell(1).font = { ...font, bold: true };
+    r.getCell(7).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF2CC' } };
+    if (name) {
+      r.height = 200;
+      ws.addImage(wb.addImage({ filename: path.join(SHOT_DIR, name), extension: 'png' }), { tl: { col: 7.05, row: 4 + i + 0.05 }, ext: { width: 410, height: 260 }, editAs: 'oneCell' });
+      r.getCell(9).value = { text: name, hyperlink: `screenshots/${name}` };
+      r.getCell(9).font = { ...font, color: { argb: 'FF0563C1' }, underline: true };
+    } else r.height = 90;
+  });
   await wb.xlsx.writeFile(OUT);
-  console.log(`Written ${OUT}: ${Q.length} questions`);
+  console.log(`Written ${OUT}: ${Q.length} questions, ${fs.readdirSync(SHOT_DIR).length} screenshots`);
 })();

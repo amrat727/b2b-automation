@@ -7,3 +7,8 @@ screenshots/
 # run logs written by probes / test runs
 reports/*.txt
 reports/sweep.json
+
+# run outputs
+reports/*.json
+reports.lnk
+test-results-*/
